@@ -14,24 +14,24 @@ import (
 )
 
 // AssertCode asserts that the error returned by an RPC has the expected code.
-func AssertCode(tb testing.TB, err error, expectedCode rpcstatus.StatusCode) bool {
+func AssertCode(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, msgAndArgs ...any) bool {
 	if code := rpcstatus.Code(err); code != expectedCode {
 		tb.Helper()
-		return assert.Fail(tb, fmt.Sprintf("rpc code=%q does not match code=%q", code, expectedCode))
+		return assert.Fail(tb, fmt.Sprintf("rpc code=%q does not match code=%q", code, expectedCode), msgAndArgs...)
 	}
 	return true
 }
 
 // RequireCode requires that the error returned by an RPC has the expected code.
-func RequireCode(tb testing.TB, err error, expectedCode rpcstatus.StatusCode) {
-	if !AssertCode(tb, err, expectedCode) {
+func RequireCode(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, msgAndArgs ...any) {
+	if !AssertCode(tb, err, expectedCode, msgAndArgs...) {
 		tb.Helper()
 		tb.FailNow()
 	}
 }
 
 // AssertStatus asserts that the error returned by an RPC has the expected code and cause.
-func AssertStatus(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string) bool {
+func AssertStatus(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string, msgAndArgs ...any) bool {
 	code := rpcstatus.Code(err)
 	var cause string
 	if err != nil {
@@ -39,21 +39,21 @@ func AssertStatus(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, e
 	}
 	if code != expectedCode || cause != expectedCause {
 		tb.Helper()
-		return assert.Fail(tb, fmt.Sprintf("rpc code=%q cause=%q does not match expected code=%q cause=%q", code, cause, expectedCode, expectedCause))
+		return assert.Fail(tb, fmt.Sprintf("rpc code=%q cause=%q does not match expected code=%q cause=%q", code, cause, expectedCode, expectedCause), msgAndArgs...)
 	}
 	return true
 }
 
 // RequireStatus requires that the error returned by an RPC has the expected code and cause.
-func RequireStatus(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string) {
-	if !AssertStatus(tb, err, expectedCode, expectedCause) {
+func RequireStatus(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string, msgAndArgs ...any) {
+	if !AssertStatus(tb, err, expectedCode, expectedCause, msgAndArgs...) {
 		tb.Helper()
 		tb.FailNow()
 	}
 }
 
 // AssertStatusContains asserts that the error returned by an RPC has the expected code and contains the cause substring.
-func AssertStatusContains(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string) bool {
+func AssertStatusContains(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string, msgAndArgs ...any) bool {
 	code := rpcstatus.Code(err)
 	var cause string
 	if err != nil {
@@ -61,14 +61,14 @@ func AssertStatusContains(tb testing.TB, err error, expectedCode rpcstatus.Statu
 	}
 	if code != expectedCode || !strings.Contains(cause, expectedCause) {
 		tb.Helper()
-		return assert.Fail(tb, fmt.Sprintf("rpc code=%q cause=%q does not match expected code=%q containing cause=%q", code, cause, expectedCode, expectedCause))
+		return assert.Fail(tb, fmt.Sprintf("rpc code=%q cause=%q does not match expected code=%q containing cause=%q", code, cause, expectedCode, expectedCause), msgAndArgs...)
 	}
 	return true
 }
 
 // RequireStatusContains requires that the error returned by an RPC has the expected code and contains the cause substring.
-func RequireStatusContains(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string) {
-	if !AssertStatusContains(tb, err, expectedCode, expectedCause) {
+func RequireStatusContains(tb testing.TB, err error, expectedCode rpcstatus.StatusCode, expectedCause string, msgAndArgs ...any) {
+	if !AssertStatusContains(tb, err, expectedCode, expectedCause, msgAndArgs...) {
 		tb.Helper() // moved from outside the if
 		tb.FailNow()
 	}
